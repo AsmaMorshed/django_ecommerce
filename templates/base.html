@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Shop{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- ── NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">🛒 DjangoShop</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/cart/">Cart</a></li>
+                <li><a href="/accounts/login/">Login</a></li>
+                <li><a href="/accounts/register/">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── FLASH MESSAGES  -->
+    <div class="messages-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- ── MAIN CONTENT  -->
+    <main class="main-content">
+        {% block content %}
+        <!-- Every other page injects content here -->
+        {% endblock %}
+    </main>
+
+    <!-- ── FOOTER  -->
+    <footer class="footer">
+        <p>&copy; 2025 DjangoShop. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

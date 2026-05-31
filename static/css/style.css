@@ -1,0 +1,100 @@
+/* ── RESET */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── BODY */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── NAVBAR */
+.navbar {
+    background: #1a1a2e;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.nav-brand {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+.nav-links a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+/* ── FLASH MESSAGES */
+.messages-container {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 0 1rem;
+}
+.alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+.alert-success { background: #d4edda; color: #155724; }
+.alert-error   { background: #f8d7da; color: #721c24; }
+.alert-warning { background: #fff3cd; color: #856404; }
+.alert-info    { background: #d1ecf1; color: #0c5460; }
+
+/* ── MAIN CONTENT */
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+/* ── FOOTER */
+.footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #aaaaaa;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.875rem;
+    margin-top: auto;
+}
+
+/* ── RESPONSIVE NAVBAR */
+@media (max-width: 600px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .nav-links {
+        gap: 1rem;
+    }
+}
