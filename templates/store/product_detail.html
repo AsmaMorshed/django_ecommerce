@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} — DjangoShop{% endblock %}
+
+{% block content %}
+
+<!-- ── BREADCRUMB -->
+<div class="breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/?category={{ product.category.slug }}">{{ product.category.name }}</a>
+    <span>›</span>
+    <span>{{ product.name }}</span>
+</div>
+
+<!-- ── MAIN DETAIL LAYOUT -->
+<div class="detail-container">
+
+    <!-- LEFT COLUMN: Images -->
+    <div class="detail-images">
+
+        <!-- Main large image -->
+        {% with product.images.first as main_img %}
+            {% if main_img %}
+                <img src="{{ main_img.image.url }}"
+                     alt="{{ product.name }}"
+                     class="main-image"
+                     id="mainImage">
+            {% else %}
+                <div class="no-image large">📦 No Image Available</div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Thumbnail row — clicking changes the main image -->
+        {% if images.count > 1 %}
+        <div class="thumb-row">
+            {% for img in images %}
+                <img src="{{ img.image.url }}"
+                     alt="{{ img.alt_text }}"
+                     class="thumb"
+                     onclick="changeImage('{{ img.image.url }}')">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT COLUMN: Info & Variant Form -->
+    <div class="detail-info">
+
+        <p class="category-tag">{{ product.category.name }}</p>
+        <h1 class="product-name">{{ product.name }}</h1>
+
+        <!-- ── Price Block -->
+        <div class="price-block">
+            {% if product.premium_price %}
+                <span class="old-price">${{ product.base_price }}</span>
+                <span class="price large">${{ product.premium_price }}</span>
+                <span class="price-note">Price varies by variant</span>
+            {% else %}
+                <span class="price large">${{ product.base_price }}</span>
+            {% endif %}
+        </div>
+
+        <!-- ── Description -->
+        {% if product.description %}
+        <p class="description">{{ product.description }}</p>
+        {% endif %}
+
+        <!-- ── Variant Selection Form -->
+        <form method="POST" action="/cart/add/" class="variant-form">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+
+            <!-- Color Dropdown -->
+            {% if colors %}
+            <div class="field-group">
+                <label for="colorSelect">🎨 Color:</label>
+                <select name="color_id" id="colorSelect">
+                    <option value="">-- Select a Color --</option>
+                    {% for color in colors %}
+                        <option value="{{ color.id }}">
+                            {{ color.name }}
+                            {% if color.hex_code %}({{ color.hex_code }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <!-- Size Radio Chips -->
+            {% if sizes %}
+            <div class="field-group">
+                <label>📐 Size:</label>
+                <div class="radio-chips">
+                    {% for size in sizes %}
+                        <label class="chip">
+                            <input type="radio"
+                                   name="size_id"
+                                   value="{{ size.id }}">
+                            {{ size.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quantity -->
+            <div class="field-group">
+                <label for="qty">🔢 Quantity:</label>
+                <div class="qty-control">
+                    <button type="button" onclick="changeQty(-1)">−</button>
+                    <input type="number"
+                           name="quantity"
+                           id="qty"
+                           value="1"
+                           min="1"
+                           max="{{ product.stock }}"
+                           readonly>
+                    <button type="button" onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+
+            <!-- Stock info -->
+            <p class="stock-badge {% if product.stock > 0 %}in-stock{% else %}out-stock{% endif %}">
+                {% if product.stock > 0 %}
+                    ✅ {{ product.stock }} items in stock
+                {% else %}
+                    ❌ Out of Stock
+                {% endif %}
+            </p>
+
+            <!-- Add to Cart Button -->
+            {% if product.stock > 0 %}
+                <button type="submit" class="btn-primary">
+                    🛒 Add to Cart
+                </button>
+            {% else %}
+                <button type="button" class="btn-disabled" disabled>
+                    Out of Stock
+                </button>
+            {% endif %}
+
+        </form>
+    </div>
+
+</div>
+
+<!-- ── JAVASCRIPT -->
+<script>
+    // Changes main image when thumbnail is clicked
+    function changeImage(url) {
+        document.getElementById('mainImage').src = url;
+    }
+
+    // +/- quantity buttons
+    function changeQty(change) {
+        const input = document.getElementById('qty');
+        const max   = parseInt(input.max);
+        const min   = parseInt(input.min);
+        let val     = parseInt(input.value) + change;
+        if (val < min) val = min;
+        if (val > max) val = max;
+        input.value = val;
+    }
+</script>
+
+{% endblock %}
