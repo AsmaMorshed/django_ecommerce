@@ -18,7 +18,7 @@ body {
 /* ── NAVBAR */
 .navbar {
     background: #1a1a2e;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -28,8 +28,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 .nav-brand {
     color: #ffffff;
@@ -72,9 +70,7 @@ body {
 
 /* ── MAIN CONTENT */
 .main-content {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 1rem 3rem;
     flex: 1;
 }
 
