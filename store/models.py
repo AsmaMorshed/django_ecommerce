@@ -115,3 +115,44 @@ class ProductImage(BaseModel):
 
     def __str__(self):
         return f"Image for {self.product.name}"
+
+
+# ── ORDER ─────────
+class Order(BaseModel):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    session_key = models.CharField(max_length=40)
+    full_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.TextField()
+    city = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    total = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Order #{self.id} — {self.full_name}"
+
+
+# ── ORDER ITEM ─────────
+class OrderItem(BaseModel):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    product_name = models.CharField(max_length=255)
+    product_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+    color_name = models.CharField(max_length=50, blank=True, default='')
+    size_name = models.CharField(max_length=20, blank=True, default='')
+
+    def __str__(self):
+        return f"{self.quantity}x {self.product_name}"

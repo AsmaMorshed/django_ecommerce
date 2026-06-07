@@ -1,0 +1,11 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div style="max-width:500px; margin:50px auto; text-align:center;">
+  <h2 style="color:green;">✅ Payment Successful!</h2>
+  <p>Order #{{ order.id }} — Transaction: {{ order.transaction_id }}</p>
+  <a href="{% url 'generate_invoice' order.id %}" style="background:#185FA5;color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin:10px;">
+    📄 Download Invoice PDF
+  </a>
+  <br><a href="/">Back to Home</a>
+</div>
+{% endblock %}

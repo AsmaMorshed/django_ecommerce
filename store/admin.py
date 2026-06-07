@@ -5,7 +5,9 @@ from .models import (
     Product,
     ProductColor,
     ProductSize,
-    ProductImage
+    ProductImage,
+    Order,
+    OrderItem,
 )
 
 
@@ -53,3 +55,19 @@ class ProductColorAdmin(admin.ModelAdmin):
 @admin.register(ProductSize)
 class ProductSizeAdmin(admin.ModelAdmin):
     list_display = ['name']
+
+
+# ── ORDER ADMIN
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ['product', 'product_name', 'product_price', 'quantity', 'color_name', 'size_name']
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'full_name', 'email', 'total', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['full_name', 'email', 'session_key']
+    readonly_fields = ['session_key', 'full_name', 'email', 'phone', 'address', 'city', 'postal_code', 'total']
+    inlines = [OrderItemInline]

@@ -16,9 +16,14 @@
             <a href="/" class="nav-brand">🛒 DjangoShop</a>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/cart/">Cart</a></li>
-                <li><a href="/accounts/login/">Login</a></li>
-                <li><a href="/accounts/register/">Register</a></li>
+                <li>
+                    <a href="/cart/">
+                        Cart
+                        {% if cart_item_count > 0 %}
+                        <span class="cart-badge">{{ cart_item_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>

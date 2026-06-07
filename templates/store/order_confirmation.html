@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed — DjangoShop{% endblock %}
+
+{% block content %}
+
+<div class="confirmation-container">
+    <div class="confirmation-icon">✅</div>
+    <h1>Order Placed Successfully!</h1>
+    <p class="confirmation-id">Order #{{ order.id|stringformat:"s"|slice:":8"|upper }}</p>
+    <p class="confirmation-email">A confirmation will be sent to <strong>{{ order.email }}</strong>.</p>
+
+    <div class="order-details">
+        <h2>Order Details</h2>
+
+        <div class="order-info-section">
+            <h3>Shipping To</h3>
+            <p>{{ order.full_name }}</p>
+            <p>{{ order.address }}</p>
+            <p>{{ order.city }}, {{ order.postal_code }}</p>
+            <p>{{ order.phone }}</p>
+        </div>
+
+        <div class="order-info-section">
+            <h3>Items</h3>
+            {% for item in order.items.all %}
+            <div class="order-item-row">
+                <span>{{ item.quantity }}× {{ item.product_name }}</span>
+                {% if item.color_name or item.size_name %}
+                    <span class="order-item-variant">
+                        {% if item.color_name %}{{ item.color_name }}{% endif %}
+                        {% if item.color_name and item.size_name %} / {% endif %}
+                        {% if item.size_name %}{{ item.size_name }}{% endif %}
+                    </span>
+                {% endif %}
+                <span>BDT{{ item.product_price|floatformat:2 }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="order-total">
+            <strong>Total: BDT{{ order.total|floatformat:2 }}</strong>
+        </div>
+    </div>
+<a href="{% url 'order_tracking' %}" 
+   style="display:inline-block; background:#1D9E75; color:white; 
+          padding:12px 28px; border-radius:8px; text-decoration:none; 
+          font-size:16px; margin:5px;">
+   📦 Track Your Order
+</a>
+
+<a href="{% url 'generate_invoice' order.id %}" 
+   style="display:inline-block; background:#185FA5; color:white; 
+          padding:12px 28px; border-radius:8px; text-decoration:none; 
+          font-size:16px; margin:5px;">
+   📄 Download Invoice PDF
+</a>
+
+<br><br>
+<a href="{% url 'index' %}" class="btn-primary">Continue Shopping</a>
+</div>
+
+{% endblock %}

@@ -9,6 +9,62 @@
 {% endblock %}
 
 {% block content %}
+<div style="text-align:center; margin:20px auto; max-width:500px; position:relative;">
+  <form method="GET" action="/">
+    <input type="text" name="search" id="search-input"
+      value="{{ search_query }}"
+      placeholder="Search products..."
+      autocomplete="off"
+      style="width:70%; padding:10px; font-size:15px; border:1px solid #ccc; border-radius:6px;">
+    <button type="submit"
+      style="padding:10px 20px; background:#185FA5; color:white; border:none; border-radius:6px; font-size:15px; cursor:pointer;">
+      🔍 Search
+    </button>
+  </form>
+  <div id="suggestions-box" style="
+    display:none; position:absolute; left:0; right:0;
+    background:white; border:1px solid #ccc; border-radius:6px;
+    margin-top:4px; z-index:999; text-align:left; box-shadow:0 4px 8px rgba(0,0,0,0.1);
+    width:73%; margin-left:auto; margin-right:auto;">
+  </div>
+</div>
+
+<script>
+const input = document.getElementById('search-input');
+const box = document.getElementById('suggestions-box');
+
+input.addEventListener('input', function() {
+  const q = this.value.trim();
+  if (q.length < 2) { box.style.display='none'; return; }
+
+  fetch(`/search-suggestions/?q=${q}`)
+    .then(r => r.json())
+    .then(data => {
+      box.innerHTML = '';
+      if (data.suggestions.length === 0) { box.style.display='none'; return; }
+      data.suggestions.forEach(item => {
+        const div = document.createElement('div');
+        div.textContent = item.name;
+        div.style.cssText = 'padding:10px 14px; cursor:pointer; border-bottom:1px solid #eee; font-size:14px;';
+        div.addEventListener('mouseover', () => div.style.background='#f0f0f0');
+        div.addEventListener('mouseout',  () => div.style.background='white');
+        div.addEventListener('click', () => {
+          input.value = item.name;
+          box.style.display = 'none';
+          input.closest('form').submit();
+        });
+        box.appendChild(div);
+      });
+      box.style.display = 'block';
+    });
+});
+
+document.addEventListener('click', function(e) {
+  if (!box.contains(e.target) && e.target !== input) {
+    box.style.display = 'none';
+  }
+});
+</script>
 
 <!-- ── PAGE HEADER -->
 <div class="page-header">
@@ -56,13 +112,22 @@
                 <p class="category-tag">{{ product.category.name }}</p>
                 <h3 class="product-title">{{ product.name }}</h3>
 
+                {% if product.stock <= 0 %}
+  <span style="background:red; color:white; padding:4px 10px; border-radius:4px; font-size:12px;">
+    Out of Stock
+  </span>
+{% else %}
+  <span style="background:green; color:white; padding:4px 10px; border-radius:4px; font-size:12px;">
+    In Stock ({{ product.stock }})
+  </span>
+{% endif %}
                 <!-- Pricing -->
                 <div class="price-area">
                     {% if product.premium_price %}
-                        <span class="old-price">${{ product.base_price }}</span>
-                        <span class="price">${{ product.premium_price }}</span>
+                        <span class="old-price">BDT{{ product.base_price }}</span>
+                        <span class="price">BDT{{ product.premium_price }}</span>
                     {% else %}
-                        <span class="price">${{ product.base_price }}</span>
+                        <span class="price">BDT{{ product.base_price }}</span>
                     {% endif %}
                 </div>
 

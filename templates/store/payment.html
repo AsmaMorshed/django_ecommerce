@@ -1,0 +1,16 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div style="max-width:500px; margin:50px auto; text-align:center;">
+  <h2>Complete Your Payment</h2>
+  <p>Order #{{ order.id }} — {{ order.full_name }}</p>
+  <p style="font-size:24px; font-weight:bold;">Total: {{ order.total }} BDT</p>
+  <form method="POST" action="{% url 'payment_success' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.id }}">
+    <button type="submit" style="background:green;color:white;padding:12px 30px;font-size:18px;border:none;border-radius:8px;cursor:pointer;">
+      ✅ Pay Now ({{ order.total }} BDT)
+    </button>
+  </form>
+  <br><a href="{% url 'payment_fail' %}" style="color:red;">Cancel Payment</a>
+</div>
+{% endblock %}

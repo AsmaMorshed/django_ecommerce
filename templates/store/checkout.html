@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout — DjangoShop{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Checkout</h1>
+</div>
+
+<div class="checkout-layout">
+    <div class="checkout-form">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                    <p class="field-error">{{ form.full_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <p class="field-error">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.phone.id_for_label }}">Phone</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <p class="field-error">{{ form.phone.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.address.id_for_label }}">Address</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                    <p class="field-error">{{ form.address.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="field-group">
+                    <label for="{{ form.city.id_for_label }}">City</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                        <p class="field-error">{{ form.city.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="field-group">
+                    <label for="{{ form.postal_code.id_for_label }}">Postal Code</label>
+                    {{ form.postal_code }}
+                    {% if form.postal_code.errors %}
+                        <p class="field-error">{{ form.postal_code.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Place Order — ${{ subtotal|floatformat:2 }}</button>
+        </form>
+    </div>
+
+    <div class="checkout-summary">
+        <h2>Order Summary</h2>
+        {% for item_key, item in cart_items %}
+        <div class="summary-item">
+            <span class="summary-item-qty">{{ item.quantity }}×</span>
+            <span class="summary-item-name">{{ item.product_name }}
+                {% if item.color_name or item.size_name %}
+                    ({{ item.color_name }}{% if item.color_name and item.size_name %} / {% endif %}{{ item.size_name }})
+                {% endif %}
+            </span>
+            <span class="summary-item-price">${{ item.unit_price|floatformat:2 }}</span>
+        </div>
+        {% endfor %}
+        <hr>
+        <div class="summary-row total">
+            <span>Total</span>
+            <span>${{ subtotal|floatformat:2 }}</span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
